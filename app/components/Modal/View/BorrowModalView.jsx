@@ -65,8 +65,8 @@ export function BorrowModalView({
 
     const userExchangePrice = newPosition ? (
         <FormattedPrice
-            noPopOver
-            noTip
+          noPopOver
+          noInvertTip
             quote_amount={maintenanceRatio * debtAmount * quotePrecision}
             quote_asset={quoteAssetObj.get("id")}
             base_asset={backingAssetObj.get("id")}
@@ -101,11 +101,13 @@ export function BorrowModalView({
                 <span>
                     {debtBalanceObj.id ? (
                         <FormattedAsset
+                        noPopOver
                             amount={remainingDebtBalance}
                             asset={quoteAssetObj.get("id")}
                         />
                     ) : (
                         <FormattedAsset
+                        noPopOver
                             amount={0}
                             asset={quoteAssetObj.get("id")}
                         />
@@ -130,11 +132,13 @@ export function BorrowModalView({
                 <span>
                     {collateralBalanceObj.id ? (
                         <FormattedAsset
+                        noPopOver
                             amount={remainingBackingBalance}
                             asset={backingAssetObj.get("id")}
                         />
                     ) : (
                         <FormattedAsset
+                        noPopOver
                             amount={0}
                             asset={backingAssetObj.get("id")}
                         />
@@ -191,6 +195,7 @@ export function BorrowModalView({
                         </span>
                         <FormattedPrice
                             noPopOver
+                            noInvertTip
                             quote_amount={asset_utils
                                 .extractRawFeedPrice(quoteAssetObj)
                                 .getIn(["base", "amount"])}
@@ -279,13 +284,6 @@ export function BorrowModalView({
                                                 ? "error"
                                                 : null
                                     }
-                                    help={
-                                        errors.close_maintenance
-                                            ? errors.close_maintenance
-                                            : errors.below_maintenance
-                                                ? errors.below_maintenance
-                                                : null
-                                    }
                                 >
                                     <Input
                                         value={
@@ -366,11 +364,20 @@ export function BorrowModalView({
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <Form.Item label={"Ratio Slider"}>
+                        <Form.Item label={"Ratio Slider"}
+
+                        help={
+                            errors.close_maintenance
+                                ? errors.close_maintenance
+                                : errors.below_maintenance
+                                    ? errors.below_maintenance
+                                    : null
+                        }
+                        >
                             <Slider
                                 step={0.01}
-                                min={0}
-                                max={maintenanceRatio * 12}
+                                min={maintenanceRatio}
+                                max={maintenanceRatio * 4}
                                 value={collateral_ratio}
                                 onChange={onRatioChange.bind(this)}
                             />
